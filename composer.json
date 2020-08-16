@@ -15,9 +15,8 @@
   "minimum-stability": "dev",
   "require": {
     "php": ">=5.4.0",
-    "guzzle/guzzle": "*",
     "guzzlehttp/guzzle": "*",
-    "ramsey/array_column": "*"
+    "it-for-free/array_column": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "3.7.*",
