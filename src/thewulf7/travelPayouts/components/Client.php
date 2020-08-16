@@ -50,6 +50,18 @@ class Client
             ]
         );
     }
+    
+    public function execute($url, array $options, $type = 'GET', $replaceOptions = true) {
+        $res = $this->execute_original($url, $options, $type, $replaceOptions);
+        
+        if ($res === 409) {
+            error_log('no response yet, sleeping');
+            sleep(3);
+            return $this->execute($url, $options, $type, $replaceOptions);
+        } else {
+            return $res;
+        }
+    }
 
     /**
      * @param string    $url
@@ -59,7 +71,7 @@ class Client
      *
      * @return mixed
      */
-    public function execute($url, array $options, $type = 'GET', $replaceOptions = true)
+    public function execute_original($url, array $options, $type = 'GET', $replaceOptions = true)
     {
         $url    = '/' . $this->getApiVersion() . '/' . $url;
         $params = [
