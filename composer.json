@@ -1,6 +1,6 @@
 {
   "name": "kolyasapphire/travel-payouts",
-  "description": "PHP SDK for travelpayouts.com",
+  "description": "PHP SDK for travelpayouts.com (thewulf7/travel-payouts fork)",
   "license": "MIT",
   "authors": [
     {
