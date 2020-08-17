@@ -221,6 +221,33 @@ class DataService extends AbstractService implements iService
     }
 
     /**
+    * Get country cities by country
+     *
+     * @param $countryName
+     *
+     * @return null|Array
+     * @throws \RuntimeException
+     */
+    public function getCountryCities($countryName)
+    {
+        $countriesArray = $this->getCountries(true);
+        $citiesArray = $this->getCities(true);
+
+        $countryCode = array_filter($countriesArray, function($each) use ($countryName) {
+            return $countryName == $each['name'];
+        });
+
+        $final = array_filter($citiesArray, function($each) use ($countryCode) {
+            $reset = reset($countryCode);
+            return $reset['code'] == $each['country_code'];
+        });
+
+        usort($final, function($a,$b) { return strcmp($a['name'],$b['name']);});
+
+        return $final;
+    }
+
+    /**
      * Get countries
      *
      * @param bool $simpleArray
