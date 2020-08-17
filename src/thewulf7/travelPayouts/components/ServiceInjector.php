@@ -69,7 +69,7 @@ trait ServiceInjector
     private function getService($serviceName)
     {
 
-        if (!($this->getClient() instanceof Client)) {
+        if (!($this->getClient() instanceof Client) && !($this->getClient() instanceof HotelsClient)) {
             throw new \RuntimeException('No token specified');
         }
         $service = new $serviceName();

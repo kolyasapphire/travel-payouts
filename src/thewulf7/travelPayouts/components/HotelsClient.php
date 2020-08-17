@@ -76,7 +76,7 @@ class HotelsClient
      */
     public function execute_original($url, array $options, $type = 'GET', $replaceOptions = true)
     {
-        $url    = '/' . $this->getApiVersion() . '/' . $url . '.json';
+        $url    = $this->getApiVersion() . '/' . $url . '.json';
         $params = [
             'http_errors' => false,
         ];
@@ -85,7 +85,10 @@ class HotelsClient
             $paramName          = $type === 'GET' ? 'query' : 'body';
             $params[$paramName] = $options;
         } else {
-            $params += $options;
+            // $params += $options;
+            unset($options['timeout']);
+            ksort($options);
+            $params['query'] = $options;
         }
 
         /** @var \GuzzleHttp\Psr7\Request $res */
@@ -93,6 +96,10 @@ class HotelsClient
 
         $statusCode = $res->getStatusCode();
         $body       = $res->getBody();
+        
+        if ($statusCode === 409) {
+            return 409;
+        }
 
         if ($statusCode !== 200) {
             $strBody = json_decode((string)$body, true);

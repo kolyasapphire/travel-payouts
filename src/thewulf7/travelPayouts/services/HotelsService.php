@@ -5,7 +5,7 @@ namespace thewulf7\travelPayouts\services;
 
 use Guzzle\Service\Exception\ValidationException;
 use thewulf7\travelPayouts\components\AbstractService;
-use thewulf7\travelPayouts\components\Client;
+use thewulf7\travelPayouts\components\HotelsClient;
 use thewulf7\travelPayouts\components\iService;
 use thewulf7\travelPayouts\entity\Hotel;
 use thewulf7\travelPayouts\entity\HotelLocation;

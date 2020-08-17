@@ -4,7 +4,7 @@ namespace thewulf7\travelPayouts\services;
 
 
 use thewulf7\travelPayouts\components\AbstractService;
-use thewulf7\travelPayouts\components\Client;
+use thewulf7\travelPayouts\components\HotelsClient;
 use thewulf7\travelPayouts\components\iService;
 use thewulf7\travelPayouts\entity\enums\EnumSortAsc;
 use thewulf7\travelPayouts\entity\enums\EnumSortHotels;
@@ -99,7 +99,7 @@ class HotelsSearchService extends AbstractService implements iService
             'childrenCount'  => $this->getChildrenCount(),
             'currency'       => $currency,
             'customerIP'     => $this->getCustomerIP(),
-            'iata'           => $this->getIata(),
+            
             'lang'           => in_array($locale, [
                 'en_US',
                 'en_GB',
@@ -116,6 +116,14 @@ class HotelsSearchService extends AbstractService implements iService
             'timeout'        => $this->getTimeout(),
             'waitForResults' => '1',
         ];
+        
+        if (!is_null($this->getIata())) {
+            $options['iata'] = $this->getIata();
+        }
+
+        if (!is_null($this->getHotelId())) {
+            $options['hotelId'] = $this->getHotelId();
+        }
 
         $options['signature'] = $this->getSignature($options);
 
@@ -317,12 +325,17 @@ class HotelsSearchService extends AbstractService implements iService
      */
     public function getSignature(array $options)
     {
-        $options['token'] = $this->getToken();
+        // $options['token'] = $this->getToken();
+
+        unset($options['marker']);
+        unset($options['timeout']);
 
         ksort($options);
 
-        return md5(implode(':', $options));
+        $together = $this->getToken().':'.$this->getMarker().':'.implode(':', $options);
 
+
+        return md5($together);
     }
 
     /**
@@ -390,10 +403,10 @@ class HotelsSearchService extends AbstractService implements iService
      */
     public function getSearchResults(
         $uuid,
+        $limit = 0,
         $sortBy = EnumSortHotels::POPULARITY,
         $sortAsc = EnumSortAsc::ASCENDING,
         $roomsCount = 0,
-        $limit = 0,
         $offset = 0
     ) {
         $url = 'search/getResult';
@@ -410,7 +423,7 @@ class HotelsSearchService extends AbstractService implements iService
 
         $options['signature'] = $this->getSignature($options);
 
-        return $this->getClient()->setApiVersion('v1')->execute($url, $options);
+        return $this->getClient()->setApiVersion('v2')->execute($url, $options);
     }
 
     /**

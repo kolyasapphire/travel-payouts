@@ -3,6 +3,7 @@ namespace thewulf7\travelPayouts;
 
 
 use thewulf7\travelPayouts\components\Client;
+use thewulf7\travelPayouts\components\HotelsClient;
 use thewulf7\travelPayouts\components\ServiceInjector;
 
 /**
@@ -27,17 +28,22 @@ class Travel
     /**
      * @param string $token
      */
-    public function __construct($token = '')
+    public function __construct($token = '',$mode = 'flights')
     {
         if ($token !== '')
         {
             $this->setToken($token);
         }
+        $this->init($mode);
     }
 
-    private function init()
+    private function init($mode)
     {
-        $this->_client = new Client($this->getToken());
+        if ($mode === 'hotels') {
+            $this->_client = new HotelsClient($this->getToken());
+        } else {
+            $this->_client = new Client($this->getToken());
+        }
     }
 
     /**
@@ -70,8 +76,6 @@ class Travel
     public function setToken($token)
     {
         $this->_token = $token;
-        $this->init();
-
         return $this;
     }
 }
