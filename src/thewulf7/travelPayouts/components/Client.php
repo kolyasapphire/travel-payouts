@@ -92,6 +92,10 @@ class Client
 
         $statusCode = $res->getStatusCode();
         $body       = $res->getBody();
+        
+        if ($statusCode === 409) {
+            return 409;
+        }
 
         if ($statusCode !== 200)
         {
